@@ -1,30 +1,21 @@
-import { defineConfig } from 'astro/config';
-import netlify from '@astrojs/netlify';
-import react from '@astrojs/react';
-import tailwindcss from '@tailwindcss/vite';
-
-// https://astro.build/config
-export default defineConfig({
-    vite: {
-        plugins: [tailwindcss()]
-    },
-    integrations: [react()],
-    adapter: netlify()
-});
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
+import tailwind from '@astrojs/tailwind';
+import netlify from '@astrojs/netlify/edge-functions'; // your repo uses edge-functions
 
 export default defineConfig({
-  // Astro's own dev server (lets external hosts connect)
+  integrations: [react(), tailwind()],
+  adapter: netlify(),
+
+  // Let Netlify Create preview connect
   server: { host: true },
 
-  // Pass through to Vite (this is what fixes the Netlify Create preview)
+  // Vite settings to allow the preview host
   vite: {
     server: {
       host: true,
-      // easiest: allow all hosts (you can lock it down later)
-      allowedHosts: true,
-      // helps when the preview is behind HTTPS/proxy
+      allowedHosts: true,          // allows *.netlify.app (simple + works)
       hmr: { clientPort: 443 }
     },
     preview: {
