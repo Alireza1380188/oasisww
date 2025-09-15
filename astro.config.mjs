@@ -15,19 +15,20 @@ export default defineConfig({
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // ...your existing Astro config
+  // Astro's own dev server (lets external hosts connect)
+  server: { host: true },
+
+  // Pass through to Vite (this is what fixes the Netlify Create preview)
   vite: {
     server: {
-      allowedHosts: [
-        'devserver-preview--oasisww.netlify.app', // the exact host shown in the error
-        '.netlify.app'                            // optional: allow all Netlify previews
-      ]
+      host: true,
+      // easiest: allow all hosts (you can lock it down later)
+      allowedHosts: true,
+      // helps when the preview is behind HTTPS/proxy
+      hmr: { clientPort: 443 }
     },
     preview: {
-      allowedHosts: [
-        'devserver-preview--oasisww.netlify.app',
-        '.netlify.app'
-      ]
+      allowedHosts: true
     }
   }
 });
